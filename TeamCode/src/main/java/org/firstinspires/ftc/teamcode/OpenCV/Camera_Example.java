@@ -21,6 +21,7 @@
 
 package org.firstinspires.ftc.teamcode.OpenCV;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -33,7 +34,7 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 
 import java.util.ArrayList;
 
-@TeleOp
+@Autonomous
 public class Camera_Example extends LinearOpMode
 {
     OpenCvCamera camera;
@@ -45,13 +46,13 @@ public class Camera_Example extends LinearOpMode
     // UNITS ARE PIXELS
     // NOTE: this calibration is for the C920 webcam at 800x448.
     // You will need to do your own calibration for other configurations!
-    double fx = 578.272;
-    double fy = 578.272;
-    double cx = 402.145;
-    double cy = 221.506;
+    double fx = 3298.7389543652603;
+    double fy = 3265.0187042219723;
+    double cx = 1165.7536942923;
+    double cy = 826.4908289614423;
 
     // UNITS ARE METERS
-    double tagsize = 0.166;
+    double tagsize = 0.0865;
 
     //tag IDS of sleeve
     int Left = 9;
