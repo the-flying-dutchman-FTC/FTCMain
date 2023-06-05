@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -31,8 +32,16 @@ public class OmniDriveOpMode_Linear extends LinearOpMode {
     private DcMotor MotorTwo = null;
     private DcMotor MotorThree = null;
 
+    private Servo gripper1;
+    private Servo gripper2;
+
     @Override
     public void runOpMode() {
+        gripper1  = hardwareMap.get(Servo.class, "gripper_1");
+        gripper2  = hardwareMap.get(Servo.class, "gripper_2");
+
+        double gripperPower = 0;
+
         // TODO: CHANGE MOTOR NAMES
         // Initialize the hardware variables.
         MotorZero = hardwareMap.get(DcMotor.class, "motor_zero");
@@ -46,6 +55,7 @@ public class OmniDriveOpMode_Linear extends LinearOpMode {
         MotorOne.setDirection(DcMotor.Direction.FORWARD);
         MotorTwo.setDirection(DcMotor.Direction.REVERSE);
         MotorThree.setDirection(DcMotor.Direction.FORWARD);
+        double MotorThreePower = 0;
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -65,19 +75,39 @@ public class OmniDriveOpMode_Linear extends LinearOpMode {
             double MotorZeroPower = -0.5 * (axial + lateral) + yaw; // Front Left
             double MotorOnePower = -0.5 * (axial - lateral) - yaw; // Front Right
             double MotorTwoPower = -0.5 * (axial - lateral) + yaw; // Back Left
-            double MotorThreePower = -0.5 * (axial + lateral) - yaw; // Back Right
+             //= -0.5 * (axial + lateral) - yaw; // Back Right
 
+            if (gamepad1.y) {
+                MotorThreePower += 0.1;
+            }
+            else if (gamepad1.a) {
+                MotorThreePower -= 0.02;
+            }
+            else {
+                MotorThreePower = 0.1;
+            }
 
+            if (gamepad1.x) {
+                gripperPower = -0.25;
+            }
+
+            if (gamepad1.b) {
+                gripperPower = 0.25;
+            }
 
             // Send calculated power to wheels.
             MotorZero.setPower(MotorZeroPower);
             MotorTwo.setPower(MotorTwoPower);
             MotorOne.setPower(MotorOnePower);
             MotorThree.setPower(MotorThreePower);
+
+            gripper1.setPosition(gripperPower);
+            gripper2.setPosition(-gripperPower);
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", MotorZeroPower, MotorOnePower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", MotorTwoPower, MotorThreePower);
+            telemetry.addData("MotorThreePower", MotorThreePower);
             telemetry.update();
         }
     }
